@@ -18,18 +18,11 @@ namespace Vidly.Controllers
         {
              var movie = new Movie()
              {
+                 Id = 1,
                  Name = "Shrek!"
              };
-            var customers = new List<Customer>
-             {
-                 new Customer {Name = "Customer 1"},
-                 new Customer {Name = "Customer 2"}
-             };
-            var viewModel = new RandomMovieViewModel
-            {
-                Customers = customers,
-            };
-             return View(viewModel);
+  
+             return View(movie);
         }
         [Route("movies/released/{year}/{month:regex(\\d{{2}}):range(1, 12)}")]
         public IActionResult ByReleaseDate(int year, int month)
