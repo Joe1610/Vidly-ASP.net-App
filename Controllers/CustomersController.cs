@@ -10,6 +10,7 @@ using Vidly.Data;
 using Vidly.Models;
 using Vidly.ViewModels;
 using Controller = Microsoft.AspNetCore.Mvc.Controller;
+using HttpPostAttribute = Microsoft.AspNetCore.Mvc.HttpPostAttribute;
 
 namespace Vidly.Controllers
 {
@@ -24,11 +25,49 @@ namespace Vidly.Controllers
         {
             _context.Dispose();
         }
+
         public IActionResult Index()
         {
             var customers = _context.Customers.Include(c => c.MembershipType).ToList();
             return View(customers);
 
+        }
+        public IActionResult New()
+        {
+            var membershipTypes = _context.MembershipType.ToList();
+            var viewModel = new CustomerFormViewModel
+            {
+                MembershipType = membershipTypes
+            };
+            return View("CustomerForm", viewModel);
+        }
+        [HttpPost]
+        public IActionResult Save(Customer customer)
+        {
+            if(customer.Id == 0)
+                _context.Customers.Add(customer);
+            else
+            {
+                var customerInDb = _context.Customers.Single(c => c.Id == customer.Id);
+                customerInDb.Name = customer.Name;
+                customerInDb.Birthdate = customer.Birthdate;
+                customerInDb.MembershipTypeId = customer.MembershipTypeId;
+                customerInDb.IsSubscribedToNewsLetter = customer.IsSubscribedToNewsLetter;
+            }
+            _context.SaveChanges();
+            return RedirectToAction("Index", "Customers");
+        }
+        public IActionResult Edit(int id)
+        {
+            var customer = _context.Customers.SingleOrDefault(c => c.Id == id);
+            if (customer == null)
+                return NotFound();
+            var viewModel = new CustomerFormViewModel
+            {
+                Customer = customer,
+                MembershipType = _context.MembershipType.ToList(),
+            };
+            return View("CustomerForm", viewModel);
         }
         public IActionResult Details(int id)
         {
