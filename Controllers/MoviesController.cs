@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Vidly.Data;
 using Vidly.Models;
 using Vidly.ViewModels;
 
@@ -10,24 +12,28 @@ namespace Vidly.Controllers
 {
     public class MoviesController : Controller
     {
+        private ApplicationDbContext _context;
+        public MoviesController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+        protected override void Dispose(bool disposing)
+        {
+            _context.Dispose();
+        }
         public IActionResult Index()
         {
-            return View();
+            var movies = _context.Movies.Include(m => m.Genre).ToList();
+            return View(movies);
+
         }
-        public IActionResult Random()
+        public IActionResult Details(int id)
         {
-             var movie = new Movie()
-             {
-                 Id = 1,
-                 Name = "Shrek!"
-             };
-  
-             return View(movie);
+            var movie = _context.Movies.Include(m => m.Genre).SingleOrDefault(m => m.Id == id);
+            if (movie == null)
+                return NotFound();
+            return View(movie);
         }
-        [Route("movies/released/{year}/{month:regex(\\d{{2}}):range(1, 12)}")]
-        public IActionResult ByReleaseDate(int year, int month)
-        {
-            return Content(year + "/" + month);
-        }
+
     }
 }

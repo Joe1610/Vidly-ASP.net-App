@@ -10,8 +10,8 @@ using Vidly.Data;
 namespace Vidly.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211009135724_AddMembershipType")]
-    partial class AddMembershipType
+    [Migration("20211011173224_AddGenreTable")]
+    partial class AddGenreTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -28,17 +28,19 @@ namespace Vidly.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTime?>("Birthdate")
+                        .HasColumnType("datetime2");
+
                     b.Property<bool>("IsSubscribedToNewsLetter")
                         .HasColumnType("bit");
-
-                    b.Property<byte?>("MembershipTypeId")
-                        .HasColumnType("tinyint");
 
                     b.Property<byte>("MembershipTypeId")
                         .HasColumnType("tinyint");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.HasKey("Id");
 
@@ -58,6 +60,10 @@ namespace Vidly.Migrations
                     b.Property<byte>("DurationInMonths")
                         .HasColumnType("tinyint");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<short>("SignUpFee")
                         .HasColumnType("smallint");
 
@@ -70,7 +76,9 @@ namespace Vidly.Migrations
                 {
                     b.HasOne("Vidly.Models.MembershipType", "MembershipType")
                         .WithMany()
-                        .HasForeignKey("MembershipTypeId");
+                        .HasForeignKey("MembershipTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("MembershipType");
                 });

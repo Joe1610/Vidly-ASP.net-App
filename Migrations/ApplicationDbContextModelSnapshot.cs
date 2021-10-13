@@ -26,16 +26,13 @@ namespace Vidly.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("Birthdate")
+                    b.Property<DateTime?>("Birthdate")
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("IsSubscribedToNewsLetter")
                         .HasColumnType("bit");
 
-                    b.Property<byte?>("MembershipTypeId")
-                        .HasColumnType("tinyint");
-
-                    b.Property<byte>("MmbershipTypeId")
+                    b.Property<byte>("MembershipTypeId")
                         .HasColumnType("tinyint");
 
                     b.Property<string>("Name")
@@ -48,6 +45,19 @@ namespace Vidly.Migrations
                     b.HasIndex("MembershipTypeId");
 
                     b.ToTable("Customers");
+                });
+
+            modelBuilder.Entity("Vidly.Models.Genre", b =>
+                {
+                    b.Property<byte>("Id")
+                        .HasColumnType("tinyint");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Genre");
                 });
 
             modelBuilder.Entity("Vidly.Models.MembershipType", b =>
@@ -73,13 +83,57 @@ namespace Vidly.Migrations
                     b.ToTable("MembershipType");
                 });
 
+            modelBuilder.Entity("Vidly.Models.Movie", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("DateAdded")
+                        .HasColumnType("datetime2");
+
+                    b.Property<byte>("GenreId")
+                        .HasColumnType("tinyint");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("NumberInStock")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ReleaseDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GenreId");
+
+                    b.ToTable("Movies");
+                });
+
             modelBuilder.Entity("Vidly.Models.Customer", b =>
                 {
                     b.HasOne("Vidly.Models.MembershipType", "MembershipType")
                         .WithMany()
-                        .HasForeignKey("MembershipTypeId");
+                        .HasForeignKey("MembershipTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("MembershipType");
+                });
+
+            modelBuilder.Entity("Vidly.Models.Movie", b =>
+                {
+                    b.HasOne("Vidly.Models.Genre", "Genre")
+                        .WithMany()
+                        .HasForeignKey("GenreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Genre");
                 });
 #pragma warning restore 612, 618
         }

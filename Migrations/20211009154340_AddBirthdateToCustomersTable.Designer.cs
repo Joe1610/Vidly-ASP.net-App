@@ -37,7 +37,7 @@ namespace Vidly.Migrations
                     b.Property<byte?>("MembershipTypeId")
                         .HasColumnType("tinyint");
 
-                    b.Property<byte>("MmbershipTypeId")
+                    b.Property<byte>("MembershipTypeId")
                         .HasColumnType("tinyint");
 
                     b.Property<string>("Name")

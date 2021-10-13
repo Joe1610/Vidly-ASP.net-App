@@ -13,7 +13,7 @@ namespace Vidly.Migrations
                 nullable: true);
 
             migrationBuilder.AddColumn<byte>(
-                name: "MmbershipTypeId",
+                name: "MembershipTypeId",
                 table: "Customer",
                 type: "tinyint",
                 nullable: false,
@@ -65,7 +65,7 @@ namespace Vidly.Migrations
                 table: "Customer");
 
             migrationBuilder.DropColumn(
-                name: "MmbershipTypeId",
+                name: "MembershipTypeId",
                 table: "Customer");
         }
     }
