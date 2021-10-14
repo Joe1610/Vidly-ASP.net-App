@@ -46,6 +46,7 @@ namespace Vidly.Controllers.Api
 
         // Post/api/customers
         [HttpPost]
+        [Route("customers")]
         public Customer CreateCustomer(Customer customer)
         {
             if (!ModelState.IsValid)
@@ -58,6 +59,7 @@ namespace Vidly.Controllers.Api
 
         // Put/api/customers/1
         [HttpPut]
+        [Route("customers/{id}")]
         public void UpdateCustomer(int id, Customer customer)
         {
             if (!ModelState.IsValid)
@@ -77,6 +79,7 @@ namespace Vidly.Controllers.Api
 
         // Delete/customers/1
         [HttpDelete]
+        [Route("customers/{id}")]
         public void DeleteCustomer(int id)
         {
             var customerInDb = _context.Customers.SingleOrDefault(c => c.Id == id);
