@@ -19,9 +19,9 @@ namespace Vidly.Models
 
         public bool IsSubscribedToNewsLetter { get; set; }
 
-        [Required (ErrorMessage = "The Membership Type is required.")]
         public MembershipType MembershipType { get; set; }
 
+        [Required (ErrorMessage = "The Membership Type is required.")]
         [Display (Name = "Membership Type")]
         public byte MembershipTypeId { get; set; }
     }
